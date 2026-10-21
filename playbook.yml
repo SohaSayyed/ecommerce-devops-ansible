@@ -1,0 +1,30 @@
+
+---
+- name: Deploy ShopEasy E-commerce Website
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Update package cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install Nginx web server
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Deploy e-commerce webpage
+      ansible.builtin.copy:
+        src: index.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Ensure Nginx is running and enabled
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
